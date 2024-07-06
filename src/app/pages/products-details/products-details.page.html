@@ -3,40 +3,21 @@
     <ion-buttons slot="start">
     <ion-back-button defaultHref="/products"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{products?.title}}</ion-title>
+    <ion-title>{{product?.title}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card *ngIf="products as product;">
-    <img [src]="imageBaseUrl + '/w400' + products?.poster_path" />
- 
+
+<ion-content *ngIf="product">
+  <ion-card>
+    <ion-img [src]="product.photos[0]?.url" *ngIf="product.photos.length"></ion-img>
     <ion-card-header>
-      <ion-card-title> {{ products?.title }} </ion-card-title>
-      <ion-card-subtitle> {{ [products].tagline }} </ion-card-subtitle>
-      <ion-text color="tertiary">
-        <span *ngFor="let g of products.genres;  let isLast = last"> {{ g.name }} {{ !isLast ? '·' : '' }}</span>
-      </ion-text>
+      <ion-card-title>{{ product.name }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-label color="medium">{{ products.overview }}</ion-label>
- 
-      <ion-item lines="none">
-        <ion-icon name="calendar-outline" slot="start"></ion-icon>
-        <ion-label>{{ products.release_date | date: 'y'}}</ion-label>
-      </ion-item>
- 
-      <ion-item lines="none">
-        <ion-icon name="cash-outline" slot="start"></ion-icon>
-        <ion-label>{{ products.budget| currency: 'NGN' }}</ion-label>
-      </ion-item>
+      <p>{{ product.description }}</p>
+      <p *ngIf="product.current_price">{{ product.current_price[0]?.NGN[0] | currency: 'NGN' }}</p>
+      <ion-button (click)="openHomepage(product.url)">Buy Now</ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>
- 
-<ion-footer>
-  <ion-button expand="full" (click)="openHomepage(products.homepage)" *ngIf="products?.homepage">
-    <ion-icon name="open-outline" slot="start"></ion-icon>
-    Open Homepage
-  </ion-button>
-</ion-footer>

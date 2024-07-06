@@ -9,21 +9,35 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./products-details.page.scss'],
 })
 export class ProductsDetailsPage implements OnInit {
-  products: any | null = null;
-  imageBaseUrl = environment.images;
+  product: any | null = null;
+  imageBaseUrl: string = environment.images;
 
   constructor(
     private route: ActivatedRoute,
     private productsService: ProductsService
-  ) { }
+  ) {}
+
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.productsService.getProductDetails(id).subscribe((res) => {
-      this.products = res;
-    });
+    this.loadProductDetails();
   }
- 
-  openHomepage(URL: string) {
+
+  loadProductDetails() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.productsService.getProductDetails(id).subscribe(
+        (res) => {
+          this.product = res;
+        },
+        (err) => {
+          console.error('Error loading product details:', err);
+        }
+      );
+    } else {
+      console.error('Product ID not found in route parameters.');
+    }
+  }
+
+  openHomepage(url: string) {
     window.open(url, '_blank');
   }
 }
